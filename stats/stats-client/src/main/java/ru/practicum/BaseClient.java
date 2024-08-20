@@ -1,6 +1,7 @@
 package ru.practicum;
 
 import org.springframework.http.*;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -29,7 +30,7 @@ public class BaseClient {
     }
 
     private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path,
-                                                          @Nullable Map<String, Object> parameters, @Nullable T body) {
+                                                          @Nullable Map<String, Object> parameters, @NonNull T body) {
         HttpEntity<T> requestEntity = new HttpEntity<>(body);
 
         ResponseEntity<Object> statsServerResponse;
