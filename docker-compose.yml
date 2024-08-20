@@ -23,8 +23,13 @@ services:
       - POSTGRES_USER=dbuser
       - POSTGRES_DB=evm
   ewm-service:
+    build: main-service
+    image: main-service-image
+    container_name: main-service-image
     ports:
       - "8080:8080"
+  depends_on:
+    - ewm-db
   ewm-db:
     image: postgres:14-alpine
 
