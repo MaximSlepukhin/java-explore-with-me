@@ -9,7 +9,7 @@ services:
     depends_on:
       - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/evm
       - SPRING_DATASOURCE_USERNAME=dbuser
       - SPRING_DATASOURCE_PASSWORD=12345
       - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
@@ -21,7 +21,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=12345
       - POSTGRES_USER=dbuser
-      - POSTGRES_DB=stats
+      - POSTGRES_DB=evm
   ewm-service:
     build: main-service
     image: main-service-image
@@ -29,8 +29,6 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - ewm-db
-      - stats-server
+    - ewm-db
   ewm-db:
     image: postgres:14-alpine
-
