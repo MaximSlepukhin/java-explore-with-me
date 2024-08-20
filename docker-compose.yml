@@ -28,8 +28,8 @@ services:
     container_name: main-service-image
     ports:
       - "8080:8080"
-  depends_on:
-    - ewm-db
+    depends_on:
+      - ewm-db
   ewm-db:
     image: postgres:14-alpine
 
