@@ -5,11 +5,11 @@ services:
     image: stats-server-image
     container_name: stats-server-image
     ports:
-      - "8080:8080"
+      - "9090:9090"
     depends_on:
       - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/evm
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
       - SPRING_DATASOURCE_USERNAME=dbuser
       - SPRING_DATASOURCE_PASSWORD=12345
       - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
@@ -17,18 +17,32 @@ services:
     image: postgres:14-alpine
     container_name: stats-db
     ports:
-      - "5432:5432"
+      - "6541:5432"
     environment:
       - POSTGRES_PASSWORD=12345
       - POSTGRES_USER=dbuser
-      - POSTGRES_DB=evm
+      - POSTGRES_DB=stats
   ewm-service:
     build: main-service
     image: main-service-image
     container_name: main-service-image
     ports:
-      - "9090:9090"
+      - "8080:8080"
     depends_on:
-    - ewm-db
+      - ewm-db
+      - stats-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/mainservice
+      - SPRING_DATASOURCE_USERNAME=dbuser
+      - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+
   ewm-db:
     image: postgres:14-alpine
+    container_name: ewm_db
+    ports:
+      - "6542:5432"
+    environment:
+      POSTGRES_DB: mainservice
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: 12345
