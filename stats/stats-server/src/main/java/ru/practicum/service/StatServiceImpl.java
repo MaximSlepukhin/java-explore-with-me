@@ -32,7 +32,6 @@ public class StatServiceImpl implements StatService {
     @Override
     public List<ViewStats> get(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
         if (start.isAfter(end)) {
-            //добавить исключение
             throw new RuntimeException();
         }
         if (uri == null) {
