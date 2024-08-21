@@ -31,9 +31,9 @@ public class StatsController {
     @ResponseStatus(HttpStatus.OK)
     public List<ViewStats> get(@RequestParam @DateTimeFormat(pattern = DateFormatter.pattern) LocalDateTime start,
                                @RequestParam @DateTimeFormat(pattern = DateFormatter.pattern) LocalDateTime end,
-                               @RequestParam(required = false) List<String> uri,
+                               @RequestParam(required = false) List<String> uris,
                                @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("GET запрос на получение статистики по посещениям.");
-        return statService.get(start, end, uri, unique);
+        return statService.get(start, end, uris, unique);
     }
 }
