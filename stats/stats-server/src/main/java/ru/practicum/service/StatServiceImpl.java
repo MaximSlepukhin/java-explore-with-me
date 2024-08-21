@@ -24,8 +24,6 @@ public class StatServiceImpl implements StatService {
         EndpointHit endpointHit = EndpointHitMapper.toEndpointHit(endpointHitDto);
         endpointHit = statRepository.save(endpointHit);
         endpointHitDto.setId(endpointHit.getId());
-        //добавить
-        log.debug("");
         return endpointHitDto;
     }
 
