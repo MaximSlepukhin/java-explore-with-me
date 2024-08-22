@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-
 public class ViewStats {
 
     public String app;

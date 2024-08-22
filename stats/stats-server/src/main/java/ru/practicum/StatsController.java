@@ -29,8 +29,8 @@ public class StatsController {
 
     @GetMapping(path = "/stats")
     @ResponseStatus(HttpStatus.OK)
-    public List<ViewStats> get(@RequestParam @DateTimeFormat(pattern = DateFormatter.pattern) LocalDateTime start,
-                               @RequestParam @DateTimeFormat(pattern = DateFormatter.pattern) LocalDateTime end,
+    public List<ViewStats> get(@RequestParam @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime start,
+                               @RequestParam @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime end,
                                @RequestParam(required = false) List<String> uris,
                                @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("GET запрос на получение статистики по посещениям.");
