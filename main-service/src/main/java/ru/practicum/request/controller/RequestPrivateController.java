@@ -29,7 +29,7 @@ public class RequestPrivateController {
     @PostMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto addRequest(@PathVariable Long userId, @RequestParam Long eventId, HttpServletRequest httpServletRequest) {
-        log.info("POST запрос на добавление запроса от пользователя с id:" + userId + " на участие в событии." );
+        log.info("POST запрос на добавление запроса от пользователя с id:" + userId + " на участие в событии.");
         log.info("" + httpServletRequest.getQueryString());
         return requestPrivateService.addRequest(userId, eventId);
     }
