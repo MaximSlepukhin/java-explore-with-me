@@ -64,6 +64,8 @@ public class RequestPrivateServiceImpl implements RequestPrivateService {
         newRequest.setCreated(LocalDateTime.now());
         if (!event.getRequestModeration()) {
             newRequest.setStatus(RequestState.CONFIRMED);
+            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+            eventRepository.save(event);
         }
         requestRepository.save(newRequest);
         return RequestMapper.toParticipationRequestDto(newRequest);

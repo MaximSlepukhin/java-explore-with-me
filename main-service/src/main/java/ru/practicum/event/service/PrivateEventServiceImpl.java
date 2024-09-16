@@ -187,7 +187,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             throw new UpdateStatusException("Статус можно изменить только у заявок, находящихся в состоянии ожидания.");
         }
         if (event.getRequestModeration() || event.getParticipantLimit() == 0) {
-            throw new RuntimeException();
+            throw new UpdateStatusException("Достигнут лимит заявок на участие в событии.");
         }
         long numberForConfirm = event.getParticipantLimit() - event.getConfirmedRequests();
         List<Request> rejectedList = requestList.stream()
@@ -206,6 +206,8 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 .collect(Collectors.toList());
         EventRequestStatusUpdateResult eventRequestStatusUpdateResult =
                 new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
+        event.setConfirmedRequests(confirmedRequests.size() + event.getConfirmedRequests());
+        eventRepository.save(event);
         return eventRequestStatusUpdateResult;
     }
 

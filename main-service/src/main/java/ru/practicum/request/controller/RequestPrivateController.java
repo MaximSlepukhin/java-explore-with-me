@@ -1,5 +1,6 @@
 package ru.practicum.request.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,9 @@ public class RequestPrivateController {
 
     @PostMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.CREATED)
-    public ParticipationRequestDto addRequest(@PathVariable Long userId, @RequestParam Long eventId) {
-        log.info("POST запрос на добавление запроса от пользователя с id:" + userId + " на участие в событии.");
+    public ParticipationRequestDto addRequest(@PathVariable Long userId, @RequestParam Long eventId, HttpServletRequest httpServletRequest) {
+        log.info("POST запрос на добавление запроса от пользователя с id:" + userId + " на участие в событии." );
+        log.info("" + httpServletRequest.getQueryString());
         return requestPrivateService.addRequest(userId, eventId);
     }
 
