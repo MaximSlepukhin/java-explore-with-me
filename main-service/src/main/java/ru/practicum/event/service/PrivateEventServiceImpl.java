@@ -44,7 +44,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
 
     private final RequestRepository requestRepository;
 
-    private final static Long MIN_TIME = 2L;
+    private final Long minTime = 2L;
 
     @Override
     public List<EventShortDto> getEventsOfUser(Long userId, Pageable pageable, Integer offset, Integer size) {
@@ -58,8 +58,8 @@ public class PrivateEventServiceImpl implements PrivateEventService {
 
     @Override
     public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
-        if (LocalDateTime.parse(newEventDto.getEventDate(), DateFormatter.DATE_TIME_FORMATTER).
-                isBefore(LocalDateTime.now().plusHours(MIN_TIME))) {
+        if (LocalDateTime.parse(newEventDto.getEventDate(), DateFormatter.DATE_TIME_FORMATTER)
+                        .isBefore(LocalDateTime.now().plusHours(minTime))) {
             throw new NotValidException("Дата и время на которые намечено событие не может быть раньше, чем через два" +
                     " часа от текущего момента.");
         }
@@ -105,8 +105,8 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         if ((event.getState().equals(EventState.PUBLISHED))) {
             throw new UpdateStatusException("Изменить можно только отмененные события илли события в состоянии ожидания модерации.");
         }
-        if (updateEventUserRequest.getEventDate() != null && LocalDateTime.parse(updateEventUserRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER).
-                isBefore(LocalDateTime.now().plusHours(MIN_TIME))) {
+        if (updateEventUserRequest.getEventDate() != null && LocalDateTime.parse(updateEventUserRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER)
+                        .isBefore(LocalDateTime.now().plusHours(minTime))) {
             throw new PatchEventException("Дата и время на которые намечено событие не может быть раньше, чем через два" +
                     " часа от текущего момента.");
         }
