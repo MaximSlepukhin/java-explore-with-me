@@ -26,7 +26,7 @@ public class StatisticServiceImpl implements StatisticService {
     private final ObjectMapper objectMapper;
 
     @Value("${app.name}")
-    private String APP_NAME;
+    private String appName;
 
 
     @Override
@@ -37,7 +37,7 @@ public class StatisticServiceImpl implements StatisticService {
         EndpointHitDto endpointHitDto = EndpointHitDto
                 .builder()
                 .ip(ip)
-                .app(APP_NAME)
+                .app(appName)
                 .uri(path)
                 .timestamp(timestamp)
                 .build();

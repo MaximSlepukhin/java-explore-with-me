@@ -44,7 +44,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
 
     private final RequestRepository requestRepository;
 
-    private final Long MIN_TIME = 2L;
+    private final static Long MIN_TIME = 2L;
 
     @Override
     public List<EventShortDto> getEventsOfUser(Long userId, Pageable pageable, Integer offset, Integer size) {

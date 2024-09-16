@@ -9,7 +9,6 @@ import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.AddRequestException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.exception.UpdateStatusException;
 import ru.practicum.request.dto.ParticipationRequestDto;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.repository.RequestRepository;
@@ -35,8 +34,8 @@ public class RequestPrivateServiceImpl implements RequestPrivateService {
     public List<ParticipationRequestDto> getRequests(Long userId) {
         findUserById(userId);
         List<Request> request = requestRepository.findRequestByRequesterId(userId);
-        List<ParticipationRequestDto> participationRequestDtos = request.stream().
-                map(RequestMapper::toParticipationRequestDto)
+        List<ParticipationRequestDto> participationRequestDtos = request.stream()
+                .map(RequestMapper::toParticipationRequestDto)
                 .collect(Collectors.toList());
         return participationRequestDtos;
     }
