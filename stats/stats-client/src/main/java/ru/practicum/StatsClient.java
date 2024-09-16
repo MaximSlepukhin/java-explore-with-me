@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.dto.EndpointHitDto;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Service
@@ -31,14 +31,17 @@ public class StatsClient extends BaseClient {
     }
 
     public ResponseEntity<Object> get(String start, String end, String[] uri, Boolean unique) {
-
-        String encodedStart = URLEncoder.encode(start, StandardCharsets.UTF_8);
-        String encodedEnd = URLEncoder.encode(end, StandardCharsets.UTF_8);
+        UriComponents uriComponents = UriComponentsBuilder.newInstance()
+                .queryParam("start",start)
+                .queryParam("end",end)
+                .build();
+        String encodedStart = uriComponents.getQueryParams().getFirst("start");
+        String encodedEnd = uriComponents.getQueryParams().getFirst("end");
         Map<String, Object> parameters = Map.of(
                 "start", encodedStart,
                 "end", encodedEnd,
                 "uris", String.join("&uris=", uri),
                 "unique", unique);
-        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}",  parameters);
+        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
     }
 }
