@@ -27,7 +27,6 @@ public class PublicCompilationServiceImpl implements PublicCompilationService {
     public List<CompilationDto> getCompilations(Boolean pinned, Pageable pageable, Integer offset, Integer size) {
         List<Compilation> compilationList = new ArrayList<>();
 
-        pinned = pinned;
         if (pinned == null) {
             pinned = true;
             compilationList = compilationRepository.findCompilationByPinned(pinned, pageable);
