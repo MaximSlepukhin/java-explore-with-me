@@ -34,6 +34,9 @@ public class PublicEventServiceImpl implements PublicEventService {
     public List<EventShortDto> getEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
                                          LocalDateTime rangeEnd, Boolean onlyAvailable, SortEnum sort,
                                          PageRequest pageRequest, HttpServletRequest request) {
+        if (rangeStart == null) {
+            rangeStart = LocalDateTime.now();
+        }
         if (rangeStart.isAfter(rangeEnd)) {
             throw new PatchEventException("Время старта позже времени окончания.");
         }
@@ -43,9 +46,6 @@ public class PublicEventServiceImpl implements PublicEventService {
             } else {
                 pageRequest.withSort(Sort.by(Sort.Direction.DESC, "views"));
             }
-        }
-        if (rangeStart == null) {
-            rangeStart = LocalDateTime.now();
         }
         List<Event> listOfEvents = eventRepository.getEvents(text, categories, paid, rangeStart,
                 rangeEnd, onlyAvailable, pageRequest);

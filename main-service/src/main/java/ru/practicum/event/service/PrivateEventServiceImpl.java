@@ -154,7 +154,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     public List<ParticipationRequestDto> getInfoAboutRequestsOfEvent(Long userId, Long eventId) {
         User user = findUserById(userId);
         Event event = findEventById(eventId);
-        if (event.getInitiator().equals(user.getId())) {
+        if (event.getInitiator().getId().equals(user.getId())) {
             throw new RuntimeException();
         }
         List<Request> requestList = requestRepository.findByEvent(event);
