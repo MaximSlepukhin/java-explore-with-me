@@ -66,7 +66,7 @@ public class RequestPrivateServiceImpl implements RequestPrivateService {
             newRequest.setStatus(RequestState.CONFIRMED);
         }
         requestRepository.save(newRequest);
-        return RequestMapper.toParticipationRequestDto(request);
+        return RequestMapper.toParticipationRequestDto(newRequest);
     }
 
     @Override
