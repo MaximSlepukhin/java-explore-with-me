@@ -28,11 +28,11 @@ public class PublicCompilationServiceImpl implements PublicCompilationService {
         List<Compilation> compilationList = new ArrayList<>();
 
         if (pinned == null) {
-            pinned = true;
+            pinned = false;
             compilationList = compilationRepository.findCompilationByPinned(pinned, pageable);
 
         } else {
-            pinned = false;
+            pinned = true;
             compilationList = compilationRepository.findCompilationByPinned(pinned, pageable);
         }
         if (compilationList.isEmpty()) {
