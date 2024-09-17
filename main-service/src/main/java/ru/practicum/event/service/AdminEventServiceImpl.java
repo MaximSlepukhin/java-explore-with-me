@@ -62,17 +62,11 @@ public class AdminEventServiceImpl implements AdminEventService {
     }
 
     @Override
-    @Transactional
     public EventFullDto updateEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с id:" + eventId + " не найдено."));
         if (event.getPublishedOn() != null && LocalDateTime.now().plusHours(HOUR_LIMIT).isBefore(event.getPublishedOn())) {
             throw new PatchEventException("Дата изменяемого события должна быть не ранее чем за час от даты публикации.");
-        }
-        LocalDateTime test = LocalDateTime.now();
-        LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER);
-        if (LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER).isBefore(LocalDateTime.now())) {
-            throw new PatchEventException("Дата события предшествует текущей дате.");
         }
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
             throw new UpdateStatusException("Событие можно опубликовать, только если оно в состоянии ожидания публикации.");

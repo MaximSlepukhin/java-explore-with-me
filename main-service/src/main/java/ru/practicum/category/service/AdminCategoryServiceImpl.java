@@ -30,7 +30,6 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     }
 
     @Override
-    @Transactional
     public CategoryDto updateCategory(Long catId, CategoryDto categoryDto) {
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Категория с id:" + catId + " не нейдена."));

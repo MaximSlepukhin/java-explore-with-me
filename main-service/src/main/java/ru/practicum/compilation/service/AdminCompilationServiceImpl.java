@@ -47,7 +47,6 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
     }
 
     @Override
-    @Transactional
     public CompilationDto updateCompilation(UpdateCompilationRequest updateCompilationRequest, Long compId) {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Подборка с id:" + compId + " не найдена."));

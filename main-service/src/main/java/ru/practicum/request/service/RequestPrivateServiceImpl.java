@@ -72,7 +72,6 @@ public class RequestPrivateServiceImpl implements RequestPrivateService {
     }
 
     @Override
-    @Transactional
     public ParticipationRequestDto updateRequest(Long userId, Long requestId) {
         findUserById(userId);
         Request request = requestRepository.findById(requestId)
