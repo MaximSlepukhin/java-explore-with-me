@@ -1,6 +1,5 @@
 package ru.practicum.request.service;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.enums.EventState;
