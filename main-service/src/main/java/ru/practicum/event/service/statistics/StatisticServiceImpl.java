@@ -12,7 +12,7 @@ import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.util.DateFormatter;
-import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
