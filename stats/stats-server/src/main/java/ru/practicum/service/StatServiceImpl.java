@@ -35,7 +35,7 @@ public class StatServiceImpl implements StatService {
             throw new RuntimeException();
         }
         if (uri == null) {
-            if (unique == true) {
+            if (unique) {
                 List<ViewStats> viewStatsList = statRepository.getViewStatsUnique(start, end);
                 return viewStatsList.stream()
                         .map(StatsMapper::toViewStatsDto)

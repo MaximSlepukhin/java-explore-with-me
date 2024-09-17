@@ -12,7 +12,7 @@ import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.util.DateFormatter;
-
+import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,18 +54,18 @@ public class StatisticServiceImpl implements StatisticService {
             return views;
         }
         LocalDateTime minDate = publishedEvents.stream()
-                .map(Event::getPublishedOn)
+                .map(Event::getCreatedOn)
                 .min(LocalDateTime::compareTo)
                 .get();
         String[] uris = events.stream()
                 .map(Event::getId)
-                .map(id -> "/event/" + id)
+                .map(id -> "/events/" + id)
                 .toArray(String[]::new);
         LocalDateTime maxDate = LocalDateTime.now();
         List<ViewStatsDto> viewStatsDtos = getStats(minDate, maxDate, uris, true);
         views = viewStatsDtos.stream()
                 .collect(Collectors.toMap(
-                        dto -> Long.valueOf(dto.getApp().substring(dto.getApp().lastIndexOf('/') + 1)),
+                        dto -> Long.valueOf(dto.getUri().substring(dto.getUri().lastIndexOf("/") + 1)),
                         dto -> dto.getHits().longValue()));
         return views;
     }
@@ -78,16 +78,20 @@ public class StatisticServiceImpl implements StatisticService {
         String end = DateFormatter.format(maxDate);
 
         ResponseEntity<Object> viewStats = statsClient.get(start, end, uris, unique);
-        if (viewStats.getStatusCode().is2xxSuccessful() && viewStats.getBody() != null) {
-            try {
-                List<ViewStatsDto> newList = new ArrayList<>();
-                newList = Arrays.asList(objectMapper.readValue(objectMapper.writeValueAsString(viewStats.getBody()), ViewStatsDto[].class));
-                return newList;
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException("Ошибка при обработке JSON: " + e.getMessage(), e);
-            }
-        } else {
-            throw new RuntimeException("Не удалось получить данные: " + viewStats.getStatusCode());
+        //if (viewStats.getStatusCode().is2xxSuccessful() && viewStats.getBody() != null) {
+        try {
+            List<ViewStatsDto> newList = new ArrayList<>();
+            String string = objectMapper.writeValueAsString(viewStats.getBody());
+            System.out.println(string);
+            newList = Arrays.asList(objectMapper.readValue(objectMapper.writeValueAsString(viewStats.getBody()), ViewStatsDto[].class));
+            //if (newList.size() == 0) {
+            //    throw new RuntimeException();
+            //}
+            return newList;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Ошибка при обработке JSON: " + e.getMessage(), e);
         }
+        //} else {
+        //    throw new RuntimeException("Не удалось получить данные: " + viewStats.getStatusCode());
     }
 }

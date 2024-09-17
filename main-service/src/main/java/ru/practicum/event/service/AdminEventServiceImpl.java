@@ -39,7 +39,7 @@ public class AdminEventServiceImpl implements AdminEventService {
     public List<EventFullDto> getEventsForAdmin(Pageable pageable, Integer offset, Integer size, List<Long> users,
                                                 List<String> states, List<Long> categories, LocalDateTime rangeEnd,
                                                 LocalDateTime rangeStart) {
-        if (rangeStart != null & rangeEnd != null) {
+        if (rangeStart != null && rangeEnd != null) {
             if (rangeStart.isAfter(rangeEnd)) {
                 throw new PatchEventException("Время старта позже времени окончания.");
             }
@@ -69,8 +69,10 @@ public class AdminEventServiceImpl implements AdminEventService {
         if (event.getPublishedOn() != null && LocalDateTime.now().plusHours(HOUR_LIMIT).isBefore(event.getPublishedOn())) {
             throw new PatchEventException("Дата изменяемого события должна быть не ранее чем за час от даты публикации.");
         }
-        if (event.getEventDate().isBefore(LocalDateTime.now())) {
-            throw new PatchEventException("Невозможно установить дату события, которая предшествует текущему времени.");
+        LocalDateTime test = LocalDateTime.now();
+        LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER);
+        if (LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER).isBefore(LocalDateTime.now())) {
+            throw new PatchEventException("Дата события предшествует текущей дате.");
         }
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
             throw new UpdateStatusException("Событие можно опубликовать, только если оно в состоянии ожидания публикации.");
@@ -118,6 +120,7 @@ public class AdminEventServiceImpl implements AdminEventService {
         if (updateEventAdminRequest.getTitle() != null) {
             event.setTitle(updateEventAdminRequest.getTitle());
         }
+        event.setViews(0L);
         return EventMapper.toEventFullDto(eventRepository.save(event));
     }
 }

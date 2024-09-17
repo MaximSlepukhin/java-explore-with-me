@@ -1,7 +1,8 @@
 package ru.practicum.event.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@Slf4j
+@RequiredArgsConstructor
 public class PublicEventServiceImpl implements PublicEventService {
 
     private final EventRepository eventRepository;
@@ -37,8 +39,10 @@ public class PublicEventServiceImpl implements PublicEventService {
         if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
-        if (rangeStart.isAfter(rangeEnd)) {
-            throw new PatchEventException("Время старта позже времени окончания.");
+        if (rangeEnd != null) {
+            if (rangeStart.isAfter(rangeEnd)) {
+                throw new PatchEventException("Время старта позже времени окончания.");
+            }
         }
         if (sort != null) {
             if (sort.equals(SortEnum.EVENT_DATE)) {
@@ -49,15 +53,11 @@ public class PublicEventServiceImpl implements PublicEventService {
         }
         List<Event> listOfEvents = eventRepository.getEvents(text, categories, paid, rangeStart,
                 rangeEnd, onlyAvailable, pageRequest);
-        Map<Long, Long> eventAndViews = statisticService.getViews(listOfEvents);
-        listOfEvents.stream()
-                .forEach(event -> {
-                    event.setViews(eventAndViews.get(event.getId()));
-                });
-        statisticService.saveViews(request);
         if (listOfEvents.isEmpty()) {
             return Collections.emptyList();
         }
+        addViews(listOfEvents);
+        statisticService.saveViews(request);
         return listOfEvents.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
     }
 
@@ -68,11 +68,17 @@ public class PublicEventServiceImpl implements PublicEventService {
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new NotFoundException("Событие с id:" + id + " имеет статус " + event.getState().toString());
         }
-        Map<Long, Long> eventAndViews = statisticService.getViews(List.of(event));
+        addViews(List.of(event));
         statisticService.saveViews(request);
-        Long views = eventAndViews.get(event.getId());
-        event.setViews(views);
-        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         return EventMapper.toEventFullDto(event);
     }
+
+    private void addViews(List<Event> listOfEvents) {
+        Map<Long, Long> eventAndViews = statisticService.getViews(listOfEvents);
+        listOfEvents.forEach(e -> {
+            e.setViews(eventAndViews.getOrDefault(e.getId(),0L));
+        });
+    }
 }
+
+
