@@ -18,7 +18,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e  FROM Event e JOIN FETCH e.category AS c " +
             "WHERE (:text is null or lower(e.annotation) like lower(concat('%',:text,'%'))) " +
-            "and (:text is null or lower(e.description) like lower(concat('%',:text,'%'))) " +
+            "or (:text is null or lower(e.description) like lower(concat('%',:text,'%'))) " +
             "and (e.eventDate >= :start) " +
             "and (e.state = ru.practicum.enums.EventState.PUBLISHED) " +
             "and (:end is null or e.eventDate <= :end) " +
