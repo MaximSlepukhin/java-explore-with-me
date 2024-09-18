@@ -64,6 +64,17 @@ public class AdminEventServiceImpl implements AdminEventService {
     public EventFullDto updateEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с id:" + eventId + " не найдено."));
+        if (updateEventAdminRequest.getEventDate() != null) {
+            LocalDateTime newEventDate;
+            try {
+                newEventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate());
+            } catch (Exception e) {
+                throw new PatchEventException("Некорректная дата начала события.");
+            }
+            if (newEventDate.isBefore(LocalDateTime.now())) {
+                throw new PatchEventException("Новая дата события предшествует текущей дате.");
+            }
+        }
         if (event.getPublishedOn() != null && LocalDateTime.now().plusHours(HOUR_LIMIT).isBefore(event.getPublishedOn())) {
             throw new PatchEventException("Дата изменяемого события должна быть не ранее чем за час от даты публикации.");
         }
