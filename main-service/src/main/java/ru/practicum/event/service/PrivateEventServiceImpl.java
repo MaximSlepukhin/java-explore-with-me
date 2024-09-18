@@ -28,6 +28,7 @@ import ru.practicum.util.CollectionUtils;
 import ru.practicum.util.DateFormatter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -166,16 +167,18 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         findUserById(userId);
         Event event = findEventById(eventId);
         List<Request> requestList = requestRepository.findRequestByIdIn(eventRequestStatusUpdateRequest.getRequestIds());
-        if (eventRequestStatusUpdateRequest.getStatus().equals("REJECTED")) {
-            requestList.stream()
-                    .peek(request -> request.setStatus(RequestState.CANCELED))
-                    .map(requestRepository::save)
-                    .collect(Collectors.toList());
-        }
         boolean verified = requestList.stream()
                 .allMatch(request -> request.getEvent().getId().longValue() == eventId);
         if (!verified) {
-            throw new RuntimeException();
+            throw new UpdateStatusException("Все запросы должны относиться к одномоу событию.");
+        }
+        if (eventRequestStatusUpdateRequest.getStatus().equals("REJECTED")) {
+            List<ParticipationRequestDto> rejectedRequests = requestList.stream()
+                    .peek(request -> request.setStatus(RequestState.REJECTED))
+                    .map(requestRepository::save)
+                    .map(RequestMapper::toParticipationRequestDto)
+                    .collect(Collectors.toList());
+            return new EventRequestStatusUpdateResult(new ArrayList<>(),rejectedRequests);
         }
         boolean listWithVerifiedStatus = requestList.stream()
                 .allMatch(request -> request.getStatus().equals(RequestState.PENDING));
@@ -190,6 +193,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 .skip(numberForConfirm)
                 .peek(request -> request.setStatus(RequestState.REJECTED))
                 .map(requestRepository::save).toList();
+
         List<Request> confirmedList = requestList.stream()
                 .limit(numberForConfirm)
                 .peek(request -> request.setStatus(RequestState.CONFIRMED))
@@ -206,7 +210,6 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         eventRepository.save(event);
         return eventRequestStatusUpdateResult;
     }
-
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
