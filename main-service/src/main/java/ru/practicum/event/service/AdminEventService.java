@@ -11,5 +11,6 @@ public interface AdminEventService {
 
     List<EventFullDto> getEventsForAdmin(Pageable pageable, Integer offset, Integer size, List<Long> usersIds,
                                          List<String> states, List<Long> categoriesIds, LocalDateTime rangeEnd, LocalDateTime rangeStart);
+
     EventFullDto updateEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 }
