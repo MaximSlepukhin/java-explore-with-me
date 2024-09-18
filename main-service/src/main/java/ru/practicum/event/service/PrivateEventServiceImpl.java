@@ -162,7 +162,6 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    @Transactional
     public EventRequestStatusUpdateResult updateStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
         findUserById(userId);
         Event event = findEventById(eventId);
@@ -171,6 +170,11 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 .allMatch(request -> request.getEvent().getId().longValue() == eventId);
         if (!verified) {
             throw new UpdateStatusException("Все запросы должны относиться к одномоу событию.");
+        }
+        boolean hasConfirmedRequests = requestList.stream()
+                .anyMatch(request -> request.getStatus().equals(RequestState.CONFIRMED));
+        if (hasConfirmedRequests && eventRequestStatusUpdateRequest.getStatus().equals("REJECTED")) {
+            throw new UpdateStatusException("Нельзя отменить уже подтвержденные заявки.");
         }
         if (eventRequestStatusUpdateRequest.getStatus().equals("REJECTED")) {
             List<ParticipationRequestDto> rejectedRequests = requestList.stream()
