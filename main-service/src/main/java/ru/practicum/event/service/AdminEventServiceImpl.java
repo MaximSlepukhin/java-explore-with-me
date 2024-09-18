@@ -67,7 +67,7 @@ public class AdminEventServiceImpl implements AdminEventService {
         if (updateEventAdminRequest.getEventDate() != null) {
             LocalDateTime newEventDate;
             try {
-                newEventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate());
+                newEventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER);
             } catch (Exception e) {
                 throw new PatchEventException("Некорректная дата начала события.");
             }
