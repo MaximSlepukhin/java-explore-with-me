@@ -67,9 +67,6 @@ public class AdminEventServiceImpl implements AdminEventService {
         if (event.getPublishedOn() != null && LocalDateTime.now().plusHours(HOUR_LIMIT).isBefore(event.getPublishedOn())) {
             throw new PatchEventException("Дата изменяемого события должна быть не ранее чем за час от даты публикации.");
         }
-        if (LocalDateTime.parse(updateEventAdminRequest.getEventDate(),DateFormatter.DATE_TIME_FORMATTER).isBefore(LocalDateTime.now())) {
-            throw new PatchEventException("Ошибка в указании даты события. Дата не может быть раньше текущего времени.");
-        }
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
             throw new UpdateStatusException("Событие можно опубликовать, только если оно в состоянии ожидания публикации.");
         }
