@@ -151,11 +151,8 @@ public class PrivateEventServiceImpl implements PrivateEventService {
 
     @Override
     public List<ParticipationRequestDto> getInfoAboutRequestsOfEvent(Long userId, Long eventId) {
-        User user = findUserById(userId);
+        findUserById(userId);
         Event event = findEventById(eventId);
-        if (event.getInitiator().getId().equals(user.getId())) {
-            throw new RuntimeException();
-        }
         List<Request> requestList = requestRepository.findByEvent(event);
 
         return requestList.stream()
