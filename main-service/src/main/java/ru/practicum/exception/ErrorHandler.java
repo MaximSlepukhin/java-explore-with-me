@@ -81,6 +81,16 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleIncorrectDataException(final IncorrectDataException e) {
+        return new ApiError(HttpStatus.BAD_REQUEST.toString(),
+                "Не проходит по условиям обновления.",
+                e.getMessage(),
+                formattedTimestamp,
+                null);
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleAddEventException(final AddEventException e) {
         return new ApiError(HttpStatus.FORBIDDEN.toString(),

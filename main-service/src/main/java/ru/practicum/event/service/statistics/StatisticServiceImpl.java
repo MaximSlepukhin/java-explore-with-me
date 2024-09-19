@@ -78,20 +78,21 @@ public class StatisticServiceImpl implements StatisticService {
         String end = DateFormatter.format(maxDate);
 
         ResponseEntity<Object> viewStats = statsClient.get(start, end, uris, unique);
-        //if (viewStats.getStatusCode().is2xxSuccessful() && viewStats.getBody() != null) {
-        try {
-            List<ViewStatsDto> newList = new ArrayList<>();
-            String string = objectMapper.writeValueAsString(viewStats.getBody());
-            System.out.println(string);
-            newList = Arrays.asList(objectMapper.readValue(objectMapper.writeValueAsString(viewStats.getBody()), ViewStatsDto[].class));
-            //if (newList.size() == 0) {
-            //    throw new RuntimeException();
-            //}
-            return newList;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Ошибка при обработке JSON: " + e.getMessage(), e);
+        if (viewStats.getStatusCode().is2xxSuccessful() && viewStats.getBody() != null) {
+            try {
+                List<ViewStatsDto> newList = new ArrayList<>();
+                String string = objectMapper.writeValueAsString(viewStats.getBody());
+                System.out.println(string);
+                newList = Arrays.asList(objectMapper.readValue(objectMapper.writeValueAsString(viewStats.getBody()), ViewStatsDto[].class));
+                if (newList.size() == 0) {
+                    throw new RuntimeException();
+                }
+                return newList;
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Ошибка при обработке JSON: " + e.getMessage(), e);
+            }
+        } else {
+            throw new RuntimeException("Не удалось получить данные: " + viewStats.getStatusCode());
         }
-        //} else {
-        //    throw new RuntimeException("Не удалось получить данные: " + viewStats.getStatusCode());
     }
 }

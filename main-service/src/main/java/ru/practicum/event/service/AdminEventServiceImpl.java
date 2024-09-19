@@ -13,6 +13,7 @@ import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.service.statistics.StatisticService;
+import ru.practicum.exception.IncorrectDataException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.PatchEventException;
 import ru.practicum.exception.UpdateStatusException;
@@ -40,7 +41,7 @@ public class AdminEventServiceImpl implements AdminEventService {
                                                 LocalDateTime rangeStart) {
         if (rangeStart != null && rangeEnd != null) {
             if (rangeStart.isAfter(rangeEnd)) {
-                throw new PatchEventException("Время старта позже времени окончания.");
+                throw new IncorrectDataException("Время старта позже времени окончания.");
             }
         }
         List<Event> events = eventRepository.getEventsForAdmin(users, states, categories, rangeStart, rangeEnd,
@@ -69,10 +70,10 @@ public class AdminEventServiceImpl implements AdminEventService {
             try {
                 newEventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER);
             } catch (Exception e) {
-                throw new PatchEventException("Некорректная дата начала события.");
+                throw new IncorrectDataException("Некорректная дата начала события.");
             }
             if (newEventDate.isBefore(LocalDateTime.now())) {
-                throw new PatchEventException("Новая дата события предшествует текущей дате.");
+                throw new IncorrectDataException("Новая дата события предшествует текущей дате.");
             }
         }
         if (event.getPublishedOn() != null && LocalDateTime.now().plusHours(HOUR_LIMIT).isBefore(event.getPublishedOn())) {
