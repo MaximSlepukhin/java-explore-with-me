@@ -16,7 +16,6 @@ import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.service.statistics.StatisticService;
 import ru.practicum.exception.IncorrectDataException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.exception.PatchEventException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
