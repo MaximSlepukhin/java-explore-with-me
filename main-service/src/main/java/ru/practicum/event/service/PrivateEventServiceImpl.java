@@ -13,10 +13,7 @@ import ru.practicum.event.location.LocationRepository;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
-import ru.practicum.exception.NotFoundException;
-import ru.practicum.exception.NotValidException;
-import ru.practicum.exception.PatchEventException;
-import ru.practicum.exception.UpdateStatusException;
+import ru.practicum.exception.*;
 import ru.practicum.request.dto.ParticipationRequestDto;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.repository.RequestRepository;
@@ -106,7 +103,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         }
         if (updateEventUserRequest.getEventDate() != null && LocalDateTime.parse(updateEventUserRequest.getEventDate(), DateFormatter.DATE_TIME_FORMATTER)
                         .isBefore(LocalDateTime.now().plusHours(minTime))) {
-            throw new PatchEventException("Дата и время на которые намечено событие не может быть раньше, чем через два" +
+            throw new IncorrectDataException("Дата и время на которые намечено событие не может быть раньше, чем через два" +
                     " часа от текущего момента.");
         }
         if (updateEventUserRequest.getAnnotation() != null) {
@@ -154,7 +151,6 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         findUserById(userId);
         Event event = findEventById(eventId);
         List<Request> requestList = requestRepository.findByEvent(event);
-
         return requestList.stream()
                 .map(RequestMapper::toParticipationRequestDto)
                 .collect(Collectors.toList());
@@ -196,7 +192,6 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 .skip(numberForConfirm)
                 .peek(request -> request.setStatus(RequestState.REJECTED))
                 .map(requestRepository::save).toList();
-
         List<Request> confirmedList = requestList.stream()
                 .limit(numberForConfirm)
                 .peek(request -> request.setStatus(RequestState.CONFIRMED))

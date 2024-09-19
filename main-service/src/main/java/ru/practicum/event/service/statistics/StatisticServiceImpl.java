@@ -84,9 +84,6 @@ public class StatisticServiceImpl implements StatisticService {
                 String string = objectMapper.writeValueAsString(viewStats.getBody());
                 System.out.println(string);
                 newList = Arrays.asList(objectMapper.readValue(objectMapper.writeValueAsString(viewStats.getBody()), ViewStatsDto[].class));
-                if (newList.size() == 0) {
-                    throw new RuntimeException();
-                }
                 return newList;
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Ошибка при обработке JSON: " + e.getMessage(), e);

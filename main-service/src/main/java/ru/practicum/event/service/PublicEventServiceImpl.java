@@ -14,6 +14,7 @@ import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.service.statistics.StatisticService;
+import ru.practicum.exception.IncorrectDataException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.PatchEventException;
 
@@ -41,7 +42,7 @@ public class PublicEventServiceImpl implements PublicEventService {
         }
         if (rangeEnd != null) {
             if (rangeStart.isAfter(rangeEnd)) {
-                throw new PatchEventException("Время старта позже времени окончания.");
+                throw new IncorrectDataException("Некорректная дата старта выборки.");
             }
         }
         if (sort != null) {
