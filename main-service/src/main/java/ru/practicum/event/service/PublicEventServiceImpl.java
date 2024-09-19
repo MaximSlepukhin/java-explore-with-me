@@ -56,7 +56,10 @@ public class PublicEventServiceImpl implements PublicEventService {
         if (listOfEvents.isEmpty()) {
             return Collections.emptyList();
         }
-        addViews(listOfEvents);
+        Map<Long, Long> eventAndViews = statisticService.getViews(listOfEvents);
+        listOfEvents.forEach(e -> {
+            e.setViews(eventAndViews.getOrDefault(e.getId(),0L));
+        });
         statisticService.saveViews(request);
         return listOfEvents.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
     }

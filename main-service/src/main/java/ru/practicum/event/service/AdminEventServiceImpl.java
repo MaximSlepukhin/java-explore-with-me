@@ -50,10 +50,10 @@ public class AdminEventServiceImpl implements AdminEventService {
             return Collections.emptyList();
         }
         Map<Long, Long> eventAndViews = statisticService.getViews(events);
-        events.forEach(event -> event.setViews(eventAndViews.get(event.getId())));
-        List<EventFullDto> eventFullDtos = events.stream()
-                .map(EventMapper::toEventFullDto)
-                .collect(Collectors.toList());
+        events.forEach(e -> {
+            e.setViews(eventAndViews.getOrDefault(e.getId(),0L));
+        });
+        List<EventFullDto> eventFullDtos = events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
         if (eventFullDtos.size() > offset) {
             return eventFullDtos.subList(offset, Math.min(offset + size, eventFullDtos.size()));
         } else {
@@ -127,5 +127,12 @@ public class AdminEventServiceImpl implements AdminEventService {
         }
         event.setViews(0L);
         return EventMapper.toEventFullDto(eventRepository.save(event));
+    }
+
+    private void addViews(List<Event> listOfEvents) {
+        Map<Long, Long> eventAndViews = statisticService.getViews(listOfEvents);
+        listOfEvents.forEach(e -> {
+            e.setViews(eventAndViews.getOrDefault(e.getId(), 0L));
+        });
     }
 }
