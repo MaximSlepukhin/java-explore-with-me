@@ -21,7 +21,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and (e.eventDate >= :start) " +
             "and (e.state = ru.practicum.enums.EventState.PUBLISHED) " +
             "and (:end is null or e.eventDate <= :end) " +
-            "and (:categories is null or e.category.id in (SELECT CAST(id AS smallint) FROM categories WHERE id IN :categories)) " +
+            "and (:categories is null or e.category.id in :categories ) " +
             "and (:paid is null or e.paid = :paid) " +
             "and (((e.participantLimit > e.confirmedRequests) and :available = true) or :available = false)")
     List<Event> getEvents(@Param("text") String text,
@@ -34,7 +34,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e FROM Event e JOIN FETCH e.category AS c JOIN FETCH e.initiator AS i " +
             "WHERE (:users is null or e.initiator.id in :users ) " +
-            "and (:categories is null or e.category.id in (SELECT CAST(id AS smallint) FROM categories WHERE id IN :categories)) " +
+            "and (:categories is null or e.category.id in :categories ) " +
             "and (:states is null or e.state in :states )" +
             "and (:start is null or e.eventDate >=:start ) " +
             "and (:end is null or e.eventDate <= :end)")

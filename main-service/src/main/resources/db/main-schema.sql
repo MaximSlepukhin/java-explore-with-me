@@ -5,7 +5,7 @@ email               VARCHAR,
 UNIQUE(email));
 
 create TABLE IF NOT EXISTS categories (
-id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+id                  SMALLINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 category_name       VARCHAR,
 UNIQUE(category_name));
 
