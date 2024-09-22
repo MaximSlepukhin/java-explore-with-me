@@ -39,6 +39,11 @@ public class PublicEventServiceImpl implements PublicEventService {
         if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
+        if (categories != null && !categories.isEmpty()) {
+            predicate = criteriaBuilder.and(predicate, root.get("category").get("id").in(categories));
+        } else {
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.isNull(root.get("category").get("id")));
+        }
         if (rangeEnd != null) {
             if (rangeStart.isAfter(rangeEnd)) {
                 throw new IncorrectDataException("Некорректная дата старта выборки.");
