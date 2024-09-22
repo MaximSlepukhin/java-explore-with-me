@@ -2,7 +2,13 @@ create TABLE IF NOT EXISTS users (
 id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 user_name           VARCHAR,
 email               VARCHAR,
+event_id            BIGINT,
 UNIQUE(email));
+
+create TABLE IF NOT EXISTS categories (
+id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+category_name       VARCHAR,
+UNIQUE(category_name));
 
 create TABLE IF NOT EXISTS locations (
 id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
