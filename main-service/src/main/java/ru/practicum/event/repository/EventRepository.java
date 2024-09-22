@@ -22,6 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and (e.eventDate >= :start) " +
             "and (e.state = ru.practicum.enums.EventState.PUBLISHED) " +
             "and (:end is null or e.eventDate <= :end) " +
+            "and (:categories is null or e.category.id in :categories ) " +
             "and (:paid is null or e.paid = :paid) " +
             "and (((e.participantLimit > e.confirmedRequests) and :available = true) or :available = false)")
     List<Event> getEvents(@Param("text") String text,
