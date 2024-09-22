@@ -4,11 +4,6 @@ user_name           VARCHAR,
 email               VARCHAR,
 UNIQUE(email));
 
-create TABLE IF NOT EXISTS categories (
-id                  SMALLINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-category_name       VARCHAR,
-UNIQUE(category_name));
-
 create TABLE IF NOT EXISTS locations (
 id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 lat DECIMAL (8,6),
