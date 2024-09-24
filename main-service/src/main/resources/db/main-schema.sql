@@ -6,7 +6,7 @@ event_id            BIGINT,
 UNIQUE(email));
 
 create TABLE IF NOT EXISTS categories (
-id                  INTEGER  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+id                  SMALLINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 category_name       VARCHAR,
 UNIQUE(category_name));
 
@@ -18,7 +18,7 @@ lon DECIMAL (9,6));
 create TABLE IF NOT EXISTS events (
 id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 annotation          VARCHAR,
-category_id         INTEGER,
+category_id         SMALLINT,
 created_date        TIMESTAMP WITHOUT TIME ZONE,
 description         VARCHAR,
 event_date          TIMESTAMP WITHOUT TIME ZONE,
