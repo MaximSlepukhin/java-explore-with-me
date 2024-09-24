@@ -28,7 +28,6 @@ public class StatisticServiceImpl implements StatisticService {
     @Value("${app.name}")
     private String appName;
 
-    private Integer k = 0;
     @Override
     public void saveViews(HttpServletRequest request) {
         String ip = request.getRemoteAddr();

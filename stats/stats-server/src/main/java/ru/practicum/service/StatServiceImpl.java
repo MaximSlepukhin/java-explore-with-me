@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StatServiceImpl implements StatService {
 
-    Integer k = 0;
     private final StatRepository statRepository;
 
     @Override
@@ -34,12 +33,6 @@ public class StatServiceImpl implements StatService {
     @Override
     public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
 
-        List<String> aasd = new ArrayList<>();
-        aasd.add("qwe");
-        aasd.add("fsadfa");
-        List<String> qwqwe = aasd;
-        List<String> asdas = uri;
-
         List<String> outputList = new ArrayList<>();
         for (String item : uri) {
             String[] parts = item.split("&uris=");
@@ -47,12 +40,6 @@ public class StatServiceImpl implements StatService {
             for (int i = 1; i < parts.length; i++) {
                 outputList.add(parts[i]); // добавляем остальные элементы
             }
-        }
-
-        if (k != 7) {
-            k++;
-        } else {
-            k = 5;
         }
         if (start.isAfter(end)) {
             throw new RuntimeException();
