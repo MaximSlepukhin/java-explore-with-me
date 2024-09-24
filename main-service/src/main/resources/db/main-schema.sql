@@ -5,10 +5,11 @@ email               VARCHAR,
 event_id            BIGINT,
 UNIQUE(email));
 
-create TABLE IF NOT EXISTS categories (
-id                  SMALLINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-category_name       VARCHAR,
-UNIQUE(category_name));
+CREATE TABLE IF NOT EXISTS categories (
+    id SMALLINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    category_name VARCHAR(255),
+    UNIQUE(category_name)
+);
 
 create TABLE IF NOT EXISTS locations (
 id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -33,7 +34,7 @@ title               VARCHAR,
 confirmed_requests   BIGINT,
 CONSTRAINT fk_events_to_categories FOREIGN KEY(category_id) REFERENCES categories(id),
 CONSTRAINT fk_events_to_locations FOREIGN KEY(location_id) REFERENCES locations(id),
-CONSTRAINT fk_events_to_userss FOREIGN KEY(initiator_id) REFERENCES users(id));
+CONSTRAINT fk_events_to_users FOREIGN KEY(initiator_id) REFERENCES users(id));
 
 create TABLE IF NOT EXISTS requests (
 id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
