@@ -18,24 +18,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
 
     List<Event> findByIdIn(List<Long> eventIds);
 
-    @Query("SELECT e  FROM Event e JOIN FETCH e.category AS c " +
-            "WHERE (:text is null or lower(e.annotation) like lower(concat('%',:text,'%')) or " +
-            ":text is null or lower(e.description) like lower(concat('%',:text,'%'))) " +
-            "and (e.eventDate >= :start) " +
-            "and (e.state = ru.practicum.enums.EventState.PUBLISHED) " +
-            "and (:end is null or e.eventDate <= :end) " +
-            "and (:categories is null or e.category.id in :categories ) " +
-            "and (:paid is null or e.paid = :paid) " +
-            "and (((e.participantLimit > e.confirmedRequests) and :available = true) or :available = false)")
-    List<Event> getEvents(@Param("text") String text,
-                          @Param("categories") List<Long> categories,
-                          @Param("paid") Boolean paid,
-                          @Param("start") LocalDateTime rangeStart,
-                          @Param("end") LocalDateTime rangeEnd,
-                          @Param("available") Boolean onlyAvailable,
-                          Pageable pageable);
-
-
     @Query("SELECT e FROM Event e JOIN FETCH e.category AS c JOIN FETCH e.initiator AS i " +
             "WHERE (:users is null or e.initiator.id in :users ) " +
             "and (:categories is null or e.category.id in :categories ) " +

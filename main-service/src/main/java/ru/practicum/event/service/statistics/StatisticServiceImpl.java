@@ -28,7 +28,7 @@ public class StatisticServiceImpl implements StatisticService {
     @Value("${app.name}")
     private String appName;
 
-
+    private Integer k = 0;
     @Override
     public void saveViews(HttpServletRequest request) {
         String ip = request.getRemoteAddr();
@@ -76,13 +76,11 @@ public class StatisticServiceImpl implements StatisticService {
                                         Boolean unique) {
         String start = DateFormatter.format(minDate);
         String end = DateFormatter.format(maxDate);
-
         ResponseEntity<Object> viewStats = statsClient.get(start, end, uris, unique);
         if (viewStats.getStatusCode().is2xxSuccessful() && viewStats.getBody() != null) {
             try {
                 List<ViewStatsDto> newList = new ArrayList<>();
-                String string = objectMapper.writeValueAsString(viewStats.getBody());
-                System.out.println(string);
+                objectMapper.writeValueAsString(viewStats.getBody());
                 newList = Arrays.asList(objectMapper.readValue(objectMapper.writeValueAsString(viewStats.getBody()), ViewStatsDto[].class));
                 return newList;
             } catch (JsonProcessingException e) {

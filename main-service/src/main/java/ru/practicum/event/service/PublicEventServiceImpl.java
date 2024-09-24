@@ -18,9 +18,11 @@ import ru.practicum.event.model.Event;
 import ru.practicum.event.model.QEvent;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.service.statistics.StatisticService;
+import ru.practicum.exception.IncorrectDataException;
 import ru.practicum.exception.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,6 +41,14 @@ public class PublicEventServiceImpl implements PublicEventService {
     public List<EventShortDto> getEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
                                          LocalDateTime rangeEnd, Boolean onlyAvailable, SortEnum sort,
                                          PageRequest pageRequest, HttpServletRequest request) {
+        if (rangeStart == null) {
+            rangeStart = LocalDateTime.now();
+        }
+        if (rangeEnd != null) {
+            if (rangeStart.isAfter(rangeEnd)) {
+                throw new IncorrectDataException("Некорректная дата старта выборки.");
+            }
+        }
         QEvent event = QEvent.event;
         QCategory category = QCategory.category;
         JPAQuery<Event> query = new JPAQuery<>(entityManager);
@@ -65,10 +75,24 @@ public class PublicEventServiceImpl implements PublicEventService {
             predicate = predicate.and(onlyAvailable ? event.participantLimit.gt(event.confirmedRequests) : null);
         }
         query.where(predicate);
-
         query.offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize());
         List<Event> events = query.fetch();
+        Map<Long, Long> eventAndViews = statisticService.getViews(events);
+        events.forEach(e -> {
+            e.setViews(eventAndViews.getOrDefault(e.getId(), 0L));
+        });
+        if (sort != null) {
+            switch (sort) {
+                case EVENT_DATE:
+                    events.sort(Comparator.comparing(Event::getEventDate));
+                    break;
+                case VIEWS:
+                    events.sort(Comparator.comparing(Event::getViews).reversed());
+                    break;
+            }
+        }
+        statisticService.saveViews(request);
         return events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
     }
 
