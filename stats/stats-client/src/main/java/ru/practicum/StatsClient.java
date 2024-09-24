@@ -11,7 +11,6 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.dto.EndpointHitDto;
 
-import java.util.List;
 import java.util.Map;
 
 @Service
