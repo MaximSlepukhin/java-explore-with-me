@@ -12,7 +12,7 @@ import java.util.List;
 public interface PublicEventService {
 
     List<EventShortDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
-                                  Boolean onlyAvailable, SortEnum sort, PageRequest pageRequest, HttpServletRequest request);
+                                  Boolean onlyAvailable, SortEnum sort, PageRequest pageRequest, HttpServletRequest request, Integer from);
 
     EventFullDto getEvent(Long id, HttpServletRequest request);
 }

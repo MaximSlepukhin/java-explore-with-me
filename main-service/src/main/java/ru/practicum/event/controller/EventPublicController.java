@@ -43,7 +43,7 @@ public class EventPublicController {
         int page = from / size;
         PageRequest pageRequest = PageRequest.of(page, size);
         return publicEventService.getEvents(text, categories, paid, rangeStart, rangeEnd,
-                onlyAvailable, sort, pageRequest, request);
+                onlyAvailable, sort, pageRequest, request, from);
     }
 
     @GetMapping("/{id}")

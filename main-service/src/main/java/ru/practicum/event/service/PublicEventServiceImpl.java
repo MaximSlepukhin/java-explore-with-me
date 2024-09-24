@@ -40,7 +40,7 @@ public class PublicEventServiceImpl implements PublicEventService {
     @Override
     public List<EventShortDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
                                          LocalDateTime rangeEnd, Boolean onlyAvailable, SortEnum sort,
-                                         PageRequest pageRequest, HttpServletRequest request) {
+                                         PageRequest pageRequest, HttpServletRequest request, Integer from) {
         if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
@@ -77,11 +77,13 @@ public class PublicEventServiceImpl implements PublicEventService {
         query.where(predicate);
         query.offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize());
+
         List<Event> events = query.fetch();
         Map<Long, Long> eventAndViews = statisticService.getViews(events);
         events.forEach(e -> {
             e.setViews(eventAndViews.getOrDefault(e.getId(), 0L));
         });
+        events.stream().skip(from);
         if (sort != null) {
             switch (sort) {
                 case EVENT_DATE:
