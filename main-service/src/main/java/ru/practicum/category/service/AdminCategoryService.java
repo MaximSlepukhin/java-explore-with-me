@@ -7,8 +7,8 @@ public interface AdminCategoryService {
 
     CategoryDto addCategory(NewCategoryDto newCategoryDto);
 
-    void deleteCategory(Long catId);
+    void deleteCategory(Integer catId);
 
-    CategoryDto updateCategory(Long catId, CategoryDto categoryDto);
+    CategoryDto updateCategory(Integer catId, CategoryDto categoryDto);
 }
 

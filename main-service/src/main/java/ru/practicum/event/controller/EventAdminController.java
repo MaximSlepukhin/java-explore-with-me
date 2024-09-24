@@ -30,7 +30,7 @@ public class EventAdminController {
     @ResponseStatus(HttpStatus.OK)
     public List<EventFullDto> getEventsForAdmin(@RequestParam(required = false) List<Long> users,
                                                 @RequestParam(required = false) List<String> states,
-                                                @RequestParam(required = false) List<Long> categories,
+                                                @RequestParam(required = false) List<Integer> categories,
                                                 @RequestParam(required = false)
                                                 @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime rangeStart,
                                                 @RequestParam(required = false)

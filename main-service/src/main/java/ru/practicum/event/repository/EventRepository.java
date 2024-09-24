@@ -26,7 +26,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
             "and (:end is null or e.eventDate <= :end)")
     List<Event> getEventsForAdmin(@Param("users") List<Long> usersIds,
                                   @Param("states") List<String> states,
-                                  @Param("categories") List<Long> categories,
+                                  @Param("categories") List<Integer> categories,
                                   @Param("start") LocalDateTime rangeStart,
                                   @Param("end") LocalDateTime rangeEnd, Pageable pageable);
 

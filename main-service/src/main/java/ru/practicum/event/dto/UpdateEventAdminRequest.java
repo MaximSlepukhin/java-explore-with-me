@@ -15,7 +15,7 @@ public class UpdateEventAdminRequest {
     @Size(min = 20, max = 2000)
     private String annotation;
 
-    private Long categoryId;
+    private Integer categoryId;
 
     @Size(min = 20, max = 7000)
     private String description;

@@ -32,7 +32,7 @@ public class PublicCategoryServiceImpl implements PublicCategoryService {
     }
 
     @Override
-    public CategoryDto getCategory(Long catId) {
+    public CategoryDto getCategory(Integer catId) {
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Категория с id:" + catId + " не нейдена."));
         return CategoryMapper.toCategoryDto(category);

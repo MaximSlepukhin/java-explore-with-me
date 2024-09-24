@@ -37,7 +37,7 @@ public class AdminEventServiceImpl implements AdminEventService {
 
     @Override
     public List<EventFullDto> getEventsForAdmin(Pageable pageable, Integer offset, Integer size, List<Long> users,
-                                                List<String> states, List<Long> categories, LocalDateTime rangeEnd,
+                                                List<String> states, List<Integer> categories, LocalDateTime rangeEnd,
                                                 LocalDateTime rangeStart) {
         if (rangeStart != null && rangeEnd != null) {
             if (rangeStart.isAfter(rangeEnd)) {

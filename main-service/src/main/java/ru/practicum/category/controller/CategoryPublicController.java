@@ -32,7 +32,7 @@ public class CategoryPublicController {
 
     @GetMapping("/{catId}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto getCategory(@PathVariable Long catId) {
+    public CategoryDto getCategory(@PathVariable Integer catId) {
         log.info("GET запрос на получение категории c id:" + catId);
         return publicCategoryService.getCategory(catId);
     }

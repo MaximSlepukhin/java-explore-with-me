@@ -110,7 +110,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             event.setAnnotation(updateEventUserRequest.getAnnotation());
         }
         if (updateEventUserRequest.getCategory() != null) {
-            Long catId = updateEventUserRequest.getCategory();
+            Integer catId = updateEventUserRequest.getCategory();
             Category category = categoryRepository.findById(catId)
                     .orElseThrow(() -> new NotFoundException("Категория с id:" + catId + " не найдена."));
             event.setCategory(category);

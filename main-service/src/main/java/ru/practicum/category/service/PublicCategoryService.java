@@ -8,5 +8,5 @@ import java.util.List;
 public interface PublicCategoryService {
     List<CategoryDto> getCategories(Pageable pageable, Integer offset, Integer size);
 
-    CategoryDto getCategory(Long catId);
+    CategoryDto getCategory(Integer catId);
 }

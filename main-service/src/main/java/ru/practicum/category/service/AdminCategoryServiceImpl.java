@@ -24,12 +24,12 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     }
 
     @Override
-    public void deleteCategory(Long catId) {
+    public void deleteCategory(Integer catId) {
         categoryRepository.deleteById(catId);
     }
 
     @Override
-    public CategoryDto updateCategory(Long catId, CategoryDto categoryDto) {
+    public CategoryDto updateCategory(Integer catId, CategoryDto categoryDto) {
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Категория с id:" + catId + " не нейдена."));
         category.setName(categoryDto.getName());
