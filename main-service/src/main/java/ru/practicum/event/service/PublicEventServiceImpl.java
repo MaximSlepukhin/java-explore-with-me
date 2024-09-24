@@ -38,9 +38,14 @@ public class PublicEventServiceImpl implements PublicEventService {
     private final EntityManager entityManager;
 
     @Override
-    public List<EventShortDto> getEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
+    public List<EventShortDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
                                          LocalDateTime rangeEnd, Boolean onlyAvailable, SortEnum sort,
                                          PageRequest pageRequest, HttpServletRequest request) {
+
+        List<Long> longCategories = categories.stream()
+                .map(Integer::longValue) // Преобразуем каждый Integer в Long
+                .collect(Collectors.toList());
+
         if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
@@ -66,7 +71,7 @@ public class PublicEventServiceImpl implements PublicEventService {
             predicate = predicate.and(event.eventDate.loe(rangeEnd));
         }
         if (categories != null && !categories.isEmpty()) {
-            predicate = predicate.and(event.category.id.in(categories));
+            predicate = predicate.and(event.category.id.in(longCategories));
         }
         if (paid != null) {
             predicate = predicate.and(event.paid.eq(paid));

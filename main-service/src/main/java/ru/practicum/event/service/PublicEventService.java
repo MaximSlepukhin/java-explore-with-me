@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PublicEventService {
 
-    List<EventShortDto> getEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
+    List<EventShortDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                   Boolean onlyAvailable, SortEnum sort, PageRequest pageRequest, HttpServletRequest request);
 
     EventFullDto getEvent(Long id, HttpServletRequest request);
