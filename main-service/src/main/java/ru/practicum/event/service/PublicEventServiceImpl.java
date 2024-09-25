@@ -54,7 +54,7 @@ public class PublicEventServiceImpl implements PublicEventService {
         JPAQuery<Event> query = new JPAQuery<>(entityManager);
         query.from(event)
                 .join(event.category, category).fetchJoin();
-        BooleanExpression predicate = null;
+        BooleanExpression predicate = event.eventDate.goe(rangeStart);
         if (rangeStart != null) {
             predicate = predicate.and(event.eventDate.goe(rangeStart));
         }
