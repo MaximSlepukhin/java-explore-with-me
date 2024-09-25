@@ -54,7 +54,7 @@ public class PublicEventServiceImpl implements PublicEventService {
         JPAQuery<Event> query = new JPAQuery<>(entityManager);
         query.from(event)
                 .join(event.category, category).fetchJoin();
-        BooleanExpression predicate = event.state.eq(EventState.PUBLISHED);
+        BooleanExpression predicate = null;
         if (rangeStart != null) {
             predicate = predicate.and(event.eventDate.goe(rangeStart));
         }
@@ -94,6 +94,7 @@ public class PublicEventServiceImpl implements PublicEventService {
                     break;
             }
         }
+        events.stream().anyMatch(event1 -> event1.getState().equals(EventState.PUBLISHED));
         statisticService.saveViews(request);
         return events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
     }
