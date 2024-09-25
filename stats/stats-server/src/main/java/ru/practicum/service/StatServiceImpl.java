@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
+import ru.practicum.exception.IncorrectDataException;
 import ru.practicum.mapper.StatsMapper;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
@@ -32,19 +33,11 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
-
-        List<String> outputList = new ArrayList<>();
-        for (String item : uri) {
-            String[] parts = item.split("&uris=");
-            outputList.add(parts[0]); // добавляем первый элемент
-            for (int i = 1; i < parts.length; i++) {
-                outputList.add(parts[i]); // добавляем остальные элементы
-            }
-        }
+        List<String> listOfUris = new ArrayList<>();
         if (start.isAfter(end)) {
-            throw new RuntimeException();
+            throw new IncorrectDataException("Некорректный диапазон выгрузки статистики.");
         }
-        if (outputList == null) {
+        if (uri == null) {
             if (unique) {
                 List<ViewStats> viewStatsList = statRepository.getViewStatsUnique(start, end);
                 return viewStatsList.stream()
@@ -57,13 +50,20 @@ public class StatServiceImpl implements StatService {
                         .collect(Collectors.toList());
             }
         } else {
+            for (String item : uri) {
+                String[] parts = item.split("&uris=");
+                listOfUris.add(parts[0]);
+                for (int i = 1; i < parts.length; i++) {
+                    listOfUris.add(parts[i]);
+                }
+            }
             if (unique) {
-                List<ViewStats> viewStatsList = statRepository.getViewStatsUniqueByUris(start, end, outputList);
+                List<ViewStats> viewStatsList = statRepository.getViewStatsUniqueByUris(start, end, listOfUris);
                 return viewStatsList.stream()
                         .map(StatsMapper::toViewStatsDto)
                         .collect(Collectors.toList());
             } else {
-                List<ViewStats> viewStatsList = statRepository.getViewStatsByUris(start, end, outputList);
+                List<ViewStats> viewStatsList = statRepository.getViewStatsByUris(start, end, listOfUris);
                 return viewStatsList.stream()
                         .map(StatsMapper::toViewStatsDto)
                         .collect(Collectors.toList());
