@@ -34,6 +34,7 @@ public class StatServiceImpl implements StatService {
     @Override
     public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
         List<String> listOfUris = new ArrayList<>();
+
         if (start.isAfter(end)) {
             throw new IncorrectDataException("Некорректный диапазон выгрузки статистики.");
         }
