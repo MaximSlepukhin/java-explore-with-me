@@ -83,7 +83,7 @@ public class AdminEventServiceImpl implements AdminEventService {
         events.stream().filter(even -> states.contains(even.getState()))
                 .skip(from)
                 .limit(size)
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
         return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
     }
 

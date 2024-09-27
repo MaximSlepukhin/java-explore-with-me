@@ -34,8 +34,8 @@ public class EventAdminController {
                                                 @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime rangeStart,
                                                 @RequestParam(required = false)
                                                 @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime rangeEnd,
-                                                @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
-                                                @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+                                                @RequestParam(required = false, defaultValue = "0") Integer from,
+                                                @RequestParam(required = false, defaultValue = "10") Integer size) {
         log.info("GET запрос на поиск событий.");
         int page = from / size;
         PageRequest pageRequest = PageRequest.of(page, size);
