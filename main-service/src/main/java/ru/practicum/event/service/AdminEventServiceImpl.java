@@ -88,11 +88,10 @@ public class AdminEventServiceImpl implements AdminEventService {
         if (size == null) {
             sizeDefault = 10;
         }
-
         events.stream().filter(even -> states.contains(even.getState()))
-                .skip(fromDefault)
-                .limit(sizeDefault)
                 .collect(Collectors.toList());
+        events.stream().skip(fromDefault)
+                .limit(sizeDefault);
         return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
     }
 
