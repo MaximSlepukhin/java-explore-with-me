@@ -72,8 +72,6 @@ public class AdminEventServiceImpl implements AdminEventService {
         }
 
         query.where(predicate);
-        query.offset(pageRequest.getOffset())
-                .limit(pageRequest.getPageSize());
 
         List<Event> events = query.fetch();
         Map<Long, Long> eventAndViews = statisticService.getViews(events);
