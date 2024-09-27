@@ -35,7 +35,6 @@ public class Request {
     @Column(name = "created_date")
     private LocalDateTime created;
 
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private RequestState status;
 }
