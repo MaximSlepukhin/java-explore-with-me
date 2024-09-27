@@ -30,6 +30,7 @@ public class Request {
 
     @JoinColumn(name = "event_id")
     @ManyToOne
+    @Enumerated(EnumType.STRING)
     private Event event;
 
     @Column(name = "created_date")
