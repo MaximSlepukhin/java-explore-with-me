@@ -83,7 +83,6 @@ public class PublicEventServiceImpl implements PublicEventService {
         events.forEach(e -> {
             e.setViews(eventAndViews.getOrDefault(e.getId(), 0L));
         });
-        events.stream().skip(from);
         if (sort != null) {
             switch (sort) {
                 case EVENT_DATE:
@@ -95,6 +94,7 @@ public class PublicEventServiceImpl implements PublicEventService {
             }
         }
         events.stream().anyMatch(event1 -> event1.getState().equals(EventState.PUBLISHED));
+        events.stream().skip(from);
         statisticService.saveViews(request);
         return events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
     }

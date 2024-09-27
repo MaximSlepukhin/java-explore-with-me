@@ -39,9 +39,8 @@ public class EventAdminController {
                                                 @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
         log.info("GET запрос на поиск событий.");
         int page = from / size;
-        int offset = from % size;
-        Pageable pageable = PageRequest.of(page, size);
-        return adminEventService.getEventsForAdmin(pageable, offset, size, users, states,
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return adminEventService.getEventsForAdmin(pageRequest, from, size, users, states,
                 categories, rangeEnd, rangeStart);
     }
 

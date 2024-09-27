@@ -7,5 +7,5 @@ import ru.practicum.category.model.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer>, QuerydslPredicateExecutor<Category> {
-
+    boolean existsByName(String name);
 }

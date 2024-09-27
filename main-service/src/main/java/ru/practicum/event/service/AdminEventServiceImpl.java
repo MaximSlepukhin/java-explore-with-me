@@ -1,9 +1,14 @@
 package ru.practicum.event.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.category.model.Category;
+import ru.practicum.category.model.QCategory;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.enums.EventState;
 import ru.practicum.event.dto.EventFullDto;
@@ -11,6 +16,7 @@ import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.location.LocationRepository;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
+import ru.practicum.event.model.QEvent;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.service.statistics.StatisticService;
 import ru.practicum.exception.IncorrectDataException;
@@ -34,9 +40,10 @@ public class AdminEventServiceImpl implements AdminEventService {
     private final StatisticService statisticService;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
+    private final EntityManager entityManager;
 
     @Override
-    public List<EventFullDto> getEventsForAdmin(Pageable pageable, Integer offset, Integer size, List<Long> users,
+    public List<EventFullDto> getEventsForAdmin(PageRequest pageRequest, Integer from, Integer size, List<Long> users,
                                                 List<String> states, List<Integer> categories, LocalDateTime rangeEnd,
                                                 LocalDateTime rangeStart) {
         if (rangeStart != null && rangeEnd != null) {
@@ -44,21 +51,42 @@ public class AdminEventServiceImpl implements AdminEventService {
                 throw new IncorrectDataException("Время старта позже времени окончания.");
             }
         }
-        List<Event> events = eventRepository.getEventsForAdmin(users, states, categories, rangeStart, rangeEnd,
-                pageable);
-        if (events.isEmpty()) {
-            return Collections.emptyList();
+        QEvent event = QEvent.event;
+        QCategory category = QCategory.category;
+        JPAQuery<Event> query = new JPAQuery<>(entityManager);
+        query.from(event)
+                .join(event.category, category).fetchJoin();
+
+        BooleanExpression predicate = event.eventDate.goe(rangeStart);
+
+        if (rangeStart != null) {
+            predicate = predicate.and(event.eventDate.goe(rangeStart));
         }
+        if (rangeEnd != null) {
+            predicate = predicate.and(event.eventDate.loe(rangeEnd));
+        }
+
+        if (categories != null && !categories.isEmpty()) {
+            predicate = predicate.and(event.category.id.in(categories));
+        }
+        if (users != null && !users.isEmpty()) {
+            predicate = predicate.and(event.initiator.id.in(users));
+        }
+
+        query.where(predicate);
+        query.offset(pageRequest.getOffset())
+                .limit(pageRequest.getPageSize());
+
+        List<Event> events = query.fetch();
         Map<Long, Long> eventAndViews = statisticService.getViews(events);
         events.forEach(e -> {
-            e.setViews(eventAndViews.getOrDefault(e.getId(),0L));
+            e.setViews(eventAndViews.getOrDefault(e.getId(), 0L));
         });
-        List<EventFullDto> eventFullDtos = events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
-        if (eventFullDtos.size() > offset) {
-            return eventFullDtos.subList(offset, Math.min(offset + size, eventFullDtos.size()));
-        } else {
-            return List.of();
-        }
+        events.stream().filter(even -> states.contains(even.getState()))
+                .skip(from)
+                .limit(size)
+                        .collect(Collectors.toList());
+        return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
     }
 
     @Override
