@@ -7,9 +7,8 @@ UNIQUE(email));
 
 CREATE TABLE IF NOT EXISTS categories (
     id SMALLINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    category_name VARCHAR(255),
-    UNIQUE(category_name)
-);
+    category_name VARCHAR(70) NOT NULL CONSTRAINT unique_category_name UNIQUE
+    );
 
 create TABLE IF NOT EXISTS locations (
 id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
