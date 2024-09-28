@@ -80,7 +80,7 @@ public class AdminEventServiceImpl implements AdminEventService {
 
         if (states != null && !states.isEmpty()) {
             events = events.stream()
-                    .filter(eventItem -> states.contains(eventItem.getState()))
+                    .filter(eventItem -> states.contains(eventItem.getState().toString()))
                     .skip(from)
                     .limit(size)
                     .collect(Collectors.toList());
