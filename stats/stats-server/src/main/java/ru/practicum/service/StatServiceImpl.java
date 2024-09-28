@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
+import ru.practicum.exception.IncorrectDataException;
 import ru.practicum.mapper.StatsMapper;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
@@ -35,7 +36,7 @@ public class StatServiceImpl implements StatService {
         List<String> listOfUris = new ArrayList<>();
 
         if (start.isAfter(end)) {
-            throw new RuntimeException();
+            throw new IncorrectDataException("Заданы неверные даты начала и конца диапазона времени.");
         }
         if (uri == null) {
             if (unique) {
