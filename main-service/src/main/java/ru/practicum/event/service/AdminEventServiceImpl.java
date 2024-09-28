@@ -78,22 +78,11 @@ public class AdminEventServiceImpl implements AdminEventService {
         events.forEach(e -> {
             e.setViews(eventAndViews.getOrDefault(e.getId(), 0L));
         });
-        Integer fromDefault = 0;
-        Integer sizeDefault = 0;
-        if (from == null) {
-            fromDefault = 0;
-        } else {
-            fromDefault = from;
-        }
-        if (size == null) {
-            sizeDefault = 10;
-        } else {
-            sizeDefault = size;
-        }
+
         events.stream().filter(even -> states.contains(even.getState()))
                 .collect(Collectors.toList());
-        events.stream().skip(fromDefault)
-                .limit(sizeDefault);
+        events.stream().skip(from)
+                .limit(size);
         return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
     }
 
