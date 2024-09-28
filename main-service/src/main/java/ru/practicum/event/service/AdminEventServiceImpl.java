@@ -54,7 +54,7 @@ public class AdminEventServiceImpl implements AdminEventService {
         query.from(event)
                 .join(event.category, category).fetchJoin();
 
-        BooleanExpression predicate = event.eventDate.goe(rangeStart);
+        BooleanExpression predicate = event.isNotNull();
 
         if (rangeStart != null) {
             predicate = predicate.and(event.eventDate.goe(rangeStart));
