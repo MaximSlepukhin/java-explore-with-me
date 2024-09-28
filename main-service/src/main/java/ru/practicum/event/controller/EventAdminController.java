@@ -39,9 +39,7 @@ public class EventAdminController {
         log.info("GET запрос на поиск событий.");
         Integer fromDefault = (from != null) ? from : 0;
         Integer sizeDefault = (size != null) ? size : 10;
-        int page = (sizeDefault > 0) ? fromDefault / sizeDefault : 0;
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return adminEventService.getEventsForAdmin(pageRequest, from, size, users, states,
+        return adminEventService.getEventsForAdmin(from, size, users, states,
                 categories, rangeEnd, rangeStart);
     }
 

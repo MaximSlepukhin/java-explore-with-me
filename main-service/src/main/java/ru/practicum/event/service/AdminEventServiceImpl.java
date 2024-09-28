@@ -41,7 +41,7 @@ public class AdminEventServiceImpl implements AdminEventService {
     private final EntityManager entityManager;
 
     @Override
-    public List<EventFullDto> getEventsForAdmin(PageRequest pageRequest, Integer from, Integer size, List<Long> users,
+    public List<EventFullDto> getEventsForAdmin(Integer from, Integer size, List<Long> users,
                                                 List<String> states, List<Integer> categories, LocalDateTime rangeEnd,
                                                 LocalDateTime rangeStart) {
         if (rangeStart != null && rangeEnd != null) {
