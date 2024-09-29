@@ -42,7 +42,6 @@ CONSTRAINT fk_events_to_categories FOREIGN KEY(category_id) REFERENCES categorie
 CONSTRAINT fk_events_to_locations FOREIGN KEY(location_id) REFERENCES locations(id),
 CONSTRAINT fk_events_to_users FOREIGN KEY(initiator_id) REFERENCES users(id));
 CREATE INDEX idx_events_id ON events (id);
-CREATE INDEX idx_events_description ON events (description);
 CREATE INDEX idx_events_state ON events (state);
 CREATE INDEX idx_events_category ON events (category_id);
 CREATE INDEX idx_events_paid ON events (paid);
