@@ -1,10 +1,7 @@
 package ru.practicum.request.request;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.enums.RequestState;
 import ru.practicum.event.model.Event;
 import ru.practicum.user.model.User;
@@ -12,7 +9,8 @@ import ru.practicum.user.model.User;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @Table(name = "requests")
 @NoArgsConstructor

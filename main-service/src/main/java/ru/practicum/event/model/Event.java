@@ -1,10 +1,7 @@
 package ru.practicum.event.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.category.model.Category;
 import ru.practicum.enums.EventState;
@@ -14,7 +11,8 @@ import ru.practicum.user.model.User;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @Table(name = "events")
 @NoArgsConstructor
