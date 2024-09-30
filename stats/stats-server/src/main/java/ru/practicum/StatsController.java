@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.Util.DateFormatter;
 import ru.practicum.dto.EndpointHitDto;
-import ru.practicum.model.ViewStats;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.service.StatService;
+import ru.practicum.util.DateFormatter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,11 +29,14 @@ public class StatsController {
 
     @GetMapping(path = "/stats")
     @ResponseStatus(HttpStatus.OK)
-    public List<ViewStats> get(@RequestParam @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime start,
-                               @RequestParam @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime end,
-                               @RequestParam(required = false) List<String> uris,
-                               @RequestParam(defaultValue = "false") Boolean unique) {
-        log.info("GET запрос на получение статистики по посещениям.");
-        return statService.get(start, end, uris, unique);
+    public List<ViewStatsDto> get(@RequestParam
+                                  @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime start,
+                                  @RequestParam
+                                  @DateTimeFormat(pattern = DateFormatter.DATE_TIME_PATTERN) LocalDateTime end,
+                                  @RequestParam(required = false) List<String> uris,
+                                  @RequestParam(defaultValue = "false") Boolean unique) {
+        log.info("StatsController", "GET запрос на получение статистики по посещениям.");
+        List<ViewStatsDto> viewStatsDtoList = statService.get(start, end, uris, unique);
+        return viewStatsDtoList;
     }
 }

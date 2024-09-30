@@ -3,8 +3,8 @@ package ru.practicum.model;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 public class ViewStats {
 
     public String app;

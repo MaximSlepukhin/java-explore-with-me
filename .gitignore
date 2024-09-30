@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/main-service/src/main/java/ru/practicum/WebConfig.java
+/stats/stats-server/src/main/java/ru/practicum/WebConfig.java

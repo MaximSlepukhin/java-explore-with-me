@@ -4,13 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStatsDto;
+import ru.practicum.exception.IncorrectDataException;
+import ru.practicum.mapper.StatsMapper;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
-import ru.practicum.model.mapper.EndpointHitMapper;
 import ru.practicum.repository.StatRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -21,28 +25,49 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public EndpointHitDto add(EndpointHitDto endpointHitDto) {
-        EndpointHit endpointHit = EndpointHitMapper.toEndpointHit(endpointHitDto);
+        EndpointHit endpointHit = StatsMapper.toEndpointHit(endpointHitDto);
         endpointHit = statRepository.save(endpointHit);
         endpointHitDto.setId(endpointHit.getId());
         return endpointHitDto;
     }
 
     @Override
-    public List<ViewStats> get(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
+    public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
+        List<String> listOfUris = new ArrayList<>();
+
         if (start.isAfter(end)) {
-            throw new RuntimeException();
+            throw new IncorrectDataException("Заданы неверные даты начала и конца диапазона времени.");
         }
         if (uri == null) {
-            if (unique == true) {
-                return statRepository.getViewStatsUnique(start, end);
+            if (unique) {
+                List<ViewStats> viewStatsList = statRepository.getViewStatsUnique(start, end);
+                return viewStatsList.stream()
+                        .map(StatsMapper::toViewStatsDto)
+                        .collect(Collectors.toList());
             } else {
-                return statRepository.getViewStats(start, end);
+                List<ViewStats> viewStatsList = statRepository.getViewStats(start, end);
+                return viewStatsList.stream()
+                        .map(StatsMapper::toViewStatsDto)
+                        .collect(Collectors.toList());
             }
         } else {
-            if (unique == true) {
-                return statRepository.getViewStatsUniqueByUris(start, end, uri);
+            for (String item : uri) {
+                String[] parts = item.split("&uris=");
+                listOfUris.add(parts[0]);
+                for (int i = 1; i < parts.length; i++) {
+                    listOfUris.add(parts[i]);
+                }
+            }
+            if (unique) {
+                List<ViewStats> viewStatsList = statRepository.getViewStatsUniqueByUris(start, end, listOfUris);
+                return viewStatsList.stream()
+                        .map(StatsMapper::toViewStatsDto)
+                        .collect(Collectors.toList());
             } else {
-                return statRepository.getViewStatsByUris(start, end, uri);
+                List<ViewStats> viewStatsList = statRepository.getViewStatsByUris(start, end, listOfUris);
+                return viewStatsList.stream()
+                        .map(StatsMapper::toViewStatsDto)
+                        .collect(Collectors.toList());
             }
         }
     }
