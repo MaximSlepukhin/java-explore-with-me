@@ -25,6 +25,7 @@ public class AdminCommentServiceImpl implements AdminCommentService {
     private final CommentRepository commentRepository;
 
     private final UserRepository userRepository;
+
     @Override
     public void deleteCommentById(Long commentId) {
         Comment comment = findCommentById(commentId);
@@ -35,8 +36,8 @@ public class AdminCommentServiceImpl implements AdminCommentService {
     public List<CommentDtoOut> getCommentsOfUser(Long userId, Pageable pageable) {
         User user = findUserById(userId);
         List<Comment> comments = commentRepository.findByUser(user, pageable);
-        return comments.stream().
-                map(CommentMapper::toCommentDtoOut)
+        return comments.stream()
+                .map(CommentMapper::toCommentDtoOut)
                 .collect(Collectors.toList());
     }
 

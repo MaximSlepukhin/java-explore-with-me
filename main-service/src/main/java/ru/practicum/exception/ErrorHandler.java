@@ -99,6 +99,7 @@ public class ErrorHandler {
                 formattedTimestamp,
                 null);
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleErrorCommentException(final ErrorCommentException e) {

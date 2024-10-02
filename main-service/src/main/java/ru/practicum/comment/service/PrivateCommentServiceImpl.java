@@ -29,7 +29,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     public CommentDtoOut addComment(NewCommentDto newCommentDto, Long eventId, Long userId) {
         User user = findUserById(userId);
         Event event = findEventById(eventId);
-        if(newCommentDto.getText().isEmpty() || newCommentDto.getText() == null) {
+        if (newCommentDto.getText().isEmpty() || newCommentDto.getText() == null) {
             throw new NotValidException("Отсутствуют данные в поле text.");
         }
         if (!event.getState().equals(EventState.PUBLISHED)) {
