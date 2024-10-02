@@ -99,6 +99,15 @@ public class ErrorHandler {
                 formattedTimestamp,
                 null);
     }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleErrorCommentException(final ErrorCommentException e) {
+        return new ApiError(HttpStatus.FORBIDDEN.toString(),
+                "Некорректные id пользователя/ id комментария",
+                e.getMessage(),
+                formattedTimestamp,
+                null);
+    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
