@@ -46,6 +46,16 @@ CREATE INDEX idx_events_state ON events (state);
 CREATE INDEX idx_events_category ON events (category_id);
 CREATE INDEX idx_events_paid ON events (paid);
 
+create TABLE IF NOT EXISTS comments (
+id                  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+text            VARCHAR(1000),
+event_id         BIGINT,
+author_id       BIGINT,
+created         TIMESTAMP WITHOUT TIME ZONE,
+CONSTRAINT fk_comments_to_events FOREIGN KEY(event_id) REFERENCES events(id),
+CONSTRAINT fk_comments_to_users FOREIGN KEY(author_id) REFERENCES users(id) );
+CREATE INDEX idx_comments_id ON comments (id);
+
 create TABLE IF NOT EXISTS requests (
 id                  BIGINT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 requester_id        BIGINT,

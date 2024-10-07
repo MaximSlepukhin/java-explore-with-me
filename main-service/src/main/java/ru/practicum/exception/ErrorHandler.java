@@ -102,6 +102,16 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleErrorCommentException(final ErrorCommentException e) {
+        return new ApiError(HttpStatus.FORBIDDEN.toString(),
+                "Некорректные id пользователя/ id комментария",
+                e.getMessage(),
+                formattedTimestamp,
+                null);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleUpdateStatusException(final UpdateStatusException e) {
         return new ApiError(HttpStatus.CONFLICT.toString(),
                 "Не проходит по условиям обновления.",
